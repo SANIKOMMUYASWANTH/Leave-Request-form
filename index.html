@@ -6,203 +6,912 @@
     <title>Leave Request</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 700px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 30px 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
-        .header { text-align: center; margin-bottom: 30px; }
-        h1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px; }
-        .form-group { margin-bottom: 22px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #334155; }
-        input, select, textarea { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 16px; }
-        .radio-group { display: flex; gap: 12px; margin-top: 10px; }
-        .radio-label { flex: 1; padding: 14px; border: 2px solid #e2e8f0; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.3s; }
-        input[type="radio"]:checked + .radio-label { background: #667eea; color: white; border-color: #667eea; }
-        input[type="radio"] { display: none; }
-        .alternative-resources { background: #f8fafc; padding: 20px; border-radius: 14px; display: none; border: 2px solid #e2e8f0; margin-top: 18px; }
-        .alternative-resources.show { display: block; }
-        .resource-entry { background: white; padding: 18px; border-radius: 10px; border: 2px solid #e2e8f0; margin-bottom: 14px; }
-        .submit-btn { background: #10b981; color: white; border: none; padding: 16px; border-radius: 10px; width: 100%; font-weight: 600; cursor: pointer; margin-top: 20px; }
-        .error-text { color: #ef4444; font-size: 12px; margin-top: 4px; display: none; }
-        .show { display: block; }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(138, 43, 226, 0.3), transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 100px rgba(126, 34, 206, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            padding: 30px 20px;
+            position: relative;
+            animation: fadeIn 0.6s ease-out;
+            z-index: 1;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .icon-wrapper {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .icon-wrapper svg {
+            width: 35px;
+            height: 35px;
+            stroke: white;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        h1 {
+            color: #1a202c;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #64748b;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        
+        .form-group {
+            margin-bottom: 22px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #334155;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.3px;
+        }
+        
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: #ffffff;
+            color: #1e293b;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23334155' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+        }
+        
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        input.error,
+        select.error {
+            border-color: #ef4444;
+        }
+        
+        .error-text {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .error-text.show {
+            display: block;
+        }
+        
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            cursor: pointer;
+        }
+        
+        input[type="file"]:hover {
+            border-color: #667eea;
+            background: #f1f5f9;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+            line-height: 1.6;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .radio-option {
+            flex: 1;
+            position: relative;
+        }
+        
+        .radio-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .radio-label {
+            display: block;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            font-size: 15px;
+            color: #64748b;
+            background: #ffffff;
+            user-select: none;
+        }
+        
+        .radio-option input[type="radio"]:checked + .radio-label {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+        }
+        
+        .alternative-resources {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 20px;
+            border-radius: 14px;
+            margin-top: 18px;
+            display: none;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .alternative-resources.show {
+            display: block;
+            animation: slideDown 0.4s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 2000px;
+            }
+        }
+        
+        .resource-entry {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            border: 2px solid #e2e8f0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .resource-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .resource-title {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .resource-title::before {
+            content: '⚡';
+            font-size: 16px;
+        }
+        
+        .remove-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+        
+        .remove-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        
+        .add-resource-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .add-resource-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .add-resource-btn::before {
+            content: '+';
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 28px;
+            width: 100%;
+            box-shadow: 0 8px 22px rgba(16, 185, 129, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .submit-btn:disabled {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .submit-btn::after {
+            content: '→';
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .required {
+            color: #ef4444;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 2px solid #6ee7b7;
+            color: #065f46;
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 500;
+            font-size: 14px;
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.2);
+        }
+        
+        .error-message {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 2px solid #fca5a5;
+            color: #991b1b;
+            padding: 16px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 500;
+            font-size: 14px;
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.2);
+        }
+        
+        .file-info {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 25px 18px;
+                border-radius: 16px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .row {
+                grid-template-columns: 1fr;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
+            <div class="icon-wrapper">
+                <svg viewBox="0 0 24 24">
+                    <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+            </div>
             <h1>Leave Request</h1>
-            <p style="color: #64748b;">Submit your application details</p>
+            <p class="subtitle">Submit your leave application with all required details</p>
         </div>
         
-        <div id="loadingMessage" style="text-align: center; padding: 20px;">Loading employee list...</div>
+        <div class="loading" id="loadingMessage">Loading employee list...</div>
+        
+        <div class="success-message" id="successMessage">
+            ✓ Your leave request has been submitted successfully!
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            ✗ There was an error submitting your request. Please try again.
+        </div>
         
         <form id="timeOffForm" style="display: none;">
             <div class="form-group">
-                <label>Employee Name *</label>
-                <select id="empName" required><option value="">Select your name</option></select>
+                <label>Employee Name <span class="required">*</span></label>
+                <select id="empName" required>
+                    <option value="">Select your name</option>
+                </select>
             </div>
             
             <div class="form-group">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                    <div><label>Start Date *</label><input type="date" id="startDate" required></div>
-                    <div><label>End Date *</label><input type="date" id="endDate" required></div>
+                <div class="row">
+                    <div>
+                        <label>Leave Start Date <span class="required">*</span></label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    <div>
+                        <label>Leave End Date <span class="required">*</span></label>
+                        <input type="date" id="endDate" required>
+                    </div>
                 </div>
             </div>
-
+            
             <div class="form-group">
                 <label>Number of Days</label>
-                <input type="text" id="numDays" readonly style="background: #f1f5f9;">
+                <input type="text" id="numDays" readonly placeholder="Will be calculated automatically" style="background: #f1f5f9; cursor: not-allowed;">
             </div>
-
+            
             <div class="form-group">
-                <label>Leave Type *</label>
+                <label>Leave Type <span class="required">*</span></label>
                 <select id="leaveType" required>
                     <option value="">Select leave type</option>
                     <option value="Earned Leave">Earned Leave</option>
+                    <option value="Advance Earned Leave">Advance Earned Leave</option>
+                    <option value="Sp.Day Off - Birthday">Sp.Day Off - Birthday</option>
+                    <option value="Sp.Day Off-Marriage Ann.">Sp.Day Off-Marriage Ann.</option>
                     <option value="Sick Leave">Sick Leave</option>
+                    <option value="Maternity Leave">Maternity Leave</option>
+                    <option value="Paternity Leave">Paternity Leave</option>
+                    <option value="Adoption Leave">Adoption Leave</option>
+                    <option value="Special Needs Leave">Special Needs Leave</option>
                     <option value="Compensatory Off">Compensatory Off</option>
+                    <option value="Leave Without Pay">Leave Without Pay</option>
+                    <option value="Bereavement Leave">Bereavement Leave</option>
                 </select>
             </div>
-
+            
             <div class="form-group">
-                <label>Screenshot *</label>
-                <input type="file" id="screenshot" accept="image/*" required>
+                <label>Reason for Leave</label>
+                <textarea id="reason" placeholder="Please provide a brief reason for your leave request"></textarea>
             </div>
-
+            
             <div class="form-group">
-                <label>Working in shifts? *</label>
+                <label>Leave Application Screenshot <span class="required">*</span></label>
+                <input type="file" id="screenshot" accept="image/*" required>
+                <p class="file-info">📎 Upload a screenshot of your leave application (JPG, PNG, etc.)</p>
+            </div>
+            
+            <div class="form-group">
+                <label>Are you working in shifts during leave dates? <span class="required">*</span></label>
                 <div class="radio-group">
-                    <input type="radio" id="shiftsYes" name="inShifts" value="yes">
-                    <label for="shiftsYes" class="radio-label">Yes</label>
-                    <input type="radio" id="shiftsNo" name="inShifts" value="no">
-                    <label for="shiftsNo" class="radio-label">No</label>
+                    <div class="radio-option">
+                        <input type="radio" id="shiftsYes" name="inShifts" value="yes" required>
+                        <label for="shiftsYes" class="radio-label">Yes</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="shiftsNo" name="inShifts" value="no" required>
+                        <label for="shiftsNo" class="radio-label">No</label>
+                    </div>
                 </div>
             </div>
-
+            
             <div id="alternativeResources" class="alternative-resources">
+                <h3 style="margin-bottom: 15px; color: #1e293b; font-size: 17px;">Alternative Resource Details</h3>
+                <p style="color: #64748b; font-size: 13px; margin-bottom: 18px;">Provide alternative resource for each shift during your leave period</p>
+                
                 <div id="resourcesContainer"></div>
-                <button type="button" id="addResourceBtn" style="padding: 10px; width: 100%; cursor: pointer;">+ Add Alternative</button>
+                
+                <button type="button" class="add-resource-btn" id="addResourceBtn">Add Alternative Resource</button>
             </div>
-
+            
             <button type="submit" class="submit-btn" id="submitBtn">Submit Request</button>
         </form>
     </div>
-
+    
     <script>
+        // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGTaeoGfQkNksjVpTPZn-pgNqfDBdn4pfEp5qfPf9GDxqyoa0rFM5TaQK6tQdqVq__3Q/exec';
+        
         let employeeList = [];
         let selectedAlternatives = new Set();
         let resourceCount = 0;
-
-        const empNameSelect = document.getElementById('empName');
+        
+        const shiftsYes = document.getElementById('shiftsYes');
+        const shiftsNo = document.getElementById('shiftsNo');
+        const alternativeResources = document.getElementById('alternativeResources');
         const resourcesContainer = document.getElementById('resourcesContainer');
-
+        const addResourceBtn = document.getElementById('addResourceBtn');
+        const timeOffForm = document.getElementById('timeOffForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const numDaysInput = document.getElementById('numDays');
+        const empNameSelect = document.getElementById('empName');
+        
+        // Load employee list on page load
         async function loadEmployeeList() {
             try {
                 const response = await fetch(SCRIPT_URL + '?action=getEmployees');
                 const data = await response.json();
-                employeeList = data.employees;
-                employeeList.forEach(emp => {
-                    const opt = document.createElement('option');
-                    opt.value = opt.textContent = emp;
-                    empNameSelect.appendChild(opt);
-                });
-                document.getElementById('loadingMessage').style.display = 'none';
-                document.getElementById('timeOffForm').style.display = 'block';
-            } catch (e) { console.error(e); }
+                
+                if (data.result === 'success' && data.employees) {
+                    employeeList = data.employees;
+                    populateEmployeeDropdown();
+                    loadingMessage.style.display = 'none';
+                    timeOffForm.style.display = 'block';
+                } else {
+                    throw new Error('Failed to load employee list');
+                }
+            } catch (error) {
+                console.error('Error loading employees:', error);
+                loadingMessage.innerHTML = '❌ Failed to load employee list. Please refresh the page.';
+            }
         }
-
-        // FIXED: Dropdown logic to prevent selection loss
+        
+        function populateEmployeeDropdown() {
+            empNameSelect.innerHTML = '<option value="">Select your name</option>';
+            employeeList.forEach(emp => {
+                const option = document.createElement('option');
+                option.value = emp;
+                option.textContent = emp;
+                empNameSelect.appendChild(option);
+            });
+        }
+        
+        function getAvailableEmployees(excludeName) {
+            return employeeList.filter(emp => 
+                emp !== excludeName && !selectedAlternatives.has(emp)
+            );
+        }
+        
         function populateAlternativeDropdown(selectElement, excludeName) {
             const currentValue = selectElement.value;
-            const available = employeeList.filter(emp => 
-                emp !== excludeName && (!selectedAlternatives.has(emp) || emp === currentValue)
-            );
+            const availableEmps = getAvailableEmployees(excludeName);
             
-            let html = '<option value="">Select employee</option>';
-            available.forEach(emp => {
-                html += `<option value="${emp}" ${emp === currentValue ? 'selected' : ''}>${emp}</option>`;
-            });
-            selectElement.innerHTML = html;
-        }
-
-        function updateAllAlternativeDropdowns(activeId) {
-            const requester = empNameSelect.value;
-            document.querySelectorAll('select[name="altResourceName[]"]').forEach(select => {
-                if (select.dataset.resourceId !== activeId) {
-                    populateAlternativeDropdown(select, requester);
+            selectElement.innerHTML = '<option value="">Select employee</option>';
+            
+            // Add back the currently selected value if it exists
+            if (currentValue && !selectedAlternatives.has(currentValue)) {
+                const option = document.createElement('option');
+                option.value = currentValue;
+                option.textContent = currentValue;
+                option.selected = true;
+                selectElement.appendChild(option);
+            }
+            
+            availableEmps.forEach(emp => {
+                if (emp !== currentValue) {
+                    const option = document.createElement('option');
+                    option.value = emp;
+                    option.textContent = emp;
+                    selectElement.appendChild(option);
                 }
             });
         }
-
-        document.getElementById('addResourceBtn').onclick = () => {
-            resourceCount++;
-            const div = document.createElement('div');
-            div.className = 'resource-entry';
-            div.innerHTML = `
-                <label>Shift Date *</label><input type="date" name="shiftDate[]" required>
-                <label>Alternative Name *</label>
-                <select name="altResourceName[]" data-resource-id="${resourceCount}" required></select>
-                <label>Shift Type *</label>
-                <select name="shiftType[]" required>
-                    <option value="First Shift">First Shift</option>
-                    <option value="Second Shift">Second Shift</option>
-                </select>
-            `;
-            resourcesContainer.appendChild(div);
-            const sel = div.querySelector('select[name="altResourceName[]"]');
-            populateAlternativeDropdown(sel, empNameSelect.value);
+        
+        function updateAllAlternativeDropdowns() {
+            const requesterName = empNameSelect.value;
+            const allSelects = document.querySelectorAll('select[name="altResourceName[]"]');
             
-            sel.onchange = function() {
-                if (this.dataset.oldValue) selectedAlternatives.delete(this.dataset.oldValue);
+            allSelects.forEach(select => {
+                populateAlternativeDropdown(select, requesterName);
+            });
+        }
+        
+        empNameSelect.addEventListener('change', function() {
+            selectedAlternatives.clear();
+            updateAllAlternativeDropdowns();
+        });
+        
+        function calculateDays() {
+            const startDate = startDateInput.value;
+            const endDate = endDateInput.value;
+            
+            if (startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                
+                if (end >= start) {
+                    const diffTime = Math.abs(end - start);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    numDaysInput.value = diffDays + (diffDays === 1 ? ' day' : ' days');
+                } else {
+                    numDaysInput.value = 'Invalid date range';
+                }
+            } else {
+                numDaysInput.value = '';
+            }
+        }
+        
+        function validateShiftDate(shiftDate) {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            const shift = new Date(shiftDate);
+            
+            if (!startDateInput.value || !endDateInput.value) {
+                return { valid: false, message: 'Please select leave start and end dates first' };
+            }
+            
+            if (shift < startDate || shift > endDate) {
+                return { 
+                    valid: false, 
+                    message: 'Shift date must be between ' + startDateInput.value + ' and ' + endDateInput.value 
+                };
+            }
+            
+            return { valid: true };
+        }
+        
+        startDateInput.addEventListener('change', calculateDays);
+        endDateInput.addEventListener('change', calculateDays);
+        
+        shiftsYes.addEventListener('change', function() {
+            if (this.checked) {
+                alternativeResources.classList.add('show');
+                if (resourceCount === 0) {
+                    addResourceEntry();
+                }
+            }
+        });
+        
+        shiftsNo.addEventListener('change', function() {
+            if (this.checked) {
+                alternativeResources.classList.remove('show');
+                resourcesContainer.innerHTML = '';
+                resourceCount = 0;
+                selectedAlternatives.clear();
+            }
+        });
+        
+        addResourceBtn.addEventListener('click', addResourceEntry);
+        
+        function addResourceEntry() {
+            if (!empNameSelect.value) {
+                alert('Please select your name first');
+                return;
+            }
+            
+            resourceCount++;
+            const resourceDiv = document.createElement('div');
+            resourceDiv.className = 'resource-entry';
+            resourceDiv.id = `resource-${resourceCount}`;
+            resourceDiv.dataset.resourceId = resourceCount;
+            
+            resourceDiv.innerHTML = `
+                <div class="resource-header">
+                    <span class="resource-title">Shift ${resourceCount}</span>
+                    <button type="button" class="remove-btn" onclick="removeResource(${resourceCount})">Remove</button>
+                </div>
+                <div class="form-group">
+                    <label>Shift Date <span class="required">*</span></label>
+                    <input type="date" name="shiftDate[]" data-resource-id="${resourceCount}" required>
+                    <div class="error-text" id="error-date-${resourceCount}"></div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label>Alternative Resource Name <span class="required">*</span></label>
+                        <select name="altResourceName[]" data-resource-id="${resourceCount}" required>
+                            <option value="">Select employee</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Shift Type <span class="required">*</span></label>
+                        <select name="shiftType[]" required>
+                            <option value="">Select shift</option>
+                            <option value="First Shift">First Shift</option>
+                            <option value="Second Shift">Second Shift</option>
+                            <option value="Third Shift">Third Shift</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            
+            resourcesContainer.appendChild(resourceDiv);
+            
+            const dateInput = resourceDiv.querySelector('input[type="date"]');
+            const selectInput = resourceDiv.querySelector('select[name="altResourceName[]"]');
+            
+            populateAlternativeDropdown(selectInput, empNameSelect.value);
+            
+            dateInput.addEventListener('change', function() {
+                const validation = validateShiftDate(this.value);
+                const errorDiv = document.getElementById(`error-date-${resourceCount}`);
+                
+                if (!validation.valid) {
+                    this.classList.add('error');
+                    errorDiv.textContent = validation.message;
+                    errorDiv.classList.add('show');
+                } else {
+                    this.classList.remove('error');
+                    errorDiv.classList.remove('show');
+                }
+            });
+            
+            selectInput.addEventListener('change', function() {
+                const oldValue = this.dataset.oldValue;
+                if (oldValue) {
+                    selectedAlternatives.delete(oldValue);
+                }
+                
                 if (this.value) {
                     selectedAlternatives.add(this.value);
                     this.dataset.oldValue = this.value;
                 }
-                updateAllAlternativeDropdowns(this.dataset.resourceId);
-            };
-        };
-
-        document.getElementById('shiftsYes').onchange = () => document.getElementById('alternativeResources').classList.add('show');
-        document.getElementById('shiftsNo').onchange = () => {
-            document.getElementById('alternativeResources').classList.remove('show');
-            resourcesContainer.innerHTML = '';
-            selectedAlternatives.clear();
-        };
-
-        document.getElementById('timeOffForm').onsubmit = async (e) => {
+                
+                updateAllAlternativeDropdowns();
+            });
+        }
+        
+        function removeResource(id) {
+            const resourceDiv = document.getElementById(`resource-${id}`);
+            if (resourceDiv) {
+                const selectInput = resourceDiv.querySelector('select[name="altResourceName[]"]');
+                if (selectInput && selectInput.value) {
+                    selectedAlternatives.delete(selectInput.value);
+                }
+                resourceDiv.remove();
+                updateAllAlternativeDropdowns();
+            }
+            
+            const remainingResources = resourcesContainer.querySelectorAll('.resource-entry');
+            remainingResources.forEach((resource, index) => {
+                const title = resource.querySelector('.resource-title');
+                if (title) {
+                    title.textContent = `Shift ${index + 1}`;
+                }
+            });
+        }
+        
+        timeOffForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true; btn.textContent = 'Submitting...';
+            
+            // Validate all shift dates
+            let hasError = false;
+            const dateInputs = document.querySelectorAll('input[name="shiftDate[]"]');
+            dateInputs.forEach(input => {
+                const validation = validateShiftDate(input.value);
+                const resourceId = input.dataset.resourceId;
+                const errorDiv = document.getElementById(`error-date-${resourceId}`);
+                
+                if (!validation.valid) {
+                    hasError = true;
+                    input.classList.add('error');
+                    errorDiv.textContent = validation.message;
+                    errorDiv.classList.add('show');
+                }
+            });
+            
+            if (hasError) {
+                alert('Please fix the errors in shift dates before submitting');
+                return;
+            }
+            
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
             
             const formData = {
+                timestamp: new Date().toISOString(),
                 employeeName: empNameSelect.value,
-                startDate: document.getElementById('startDate').value,
-                endDate: document.getElementById('endDate').value,
-                numDays: document.getElementById('numDays').value,
+                startDate: startDateInput.value,
+                endDate: endDateInput.value,
+                numDays: numDaysInput.value,
                 leaveType: document.getElementById('leaveType').value,
+                reason: document.getElementById('reason').value,
                 inShifts: document.querySelector('input[name="inShifts"]:checked').value,
                 alternativeResources: []
             };
-
-            if (formData.inShifts === 'yes') {
-                const dates = document.querySelectorAll('input[name="shiftDate[]"]');
-                const names = document.querySelectorAll('select[name="altResourceName[]"]');
-                const types = document.querySelectorAll('select[name="shiftType[]"]');
-                dates.forEach((d, i) => {
-                    formData.alternativeResources.push({shiftDate: d.value, alternativeName: names[i].value, shiftType: types[i].value});
+            
+            const fileInput = document.getElementById('screenshot');
+            const file = fileInput.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    formData.screenshot = {
+                        data: e.target.result.split(',')[1],
+                        name: file.name,
+                        mimeType: file.type
+                    };
+                    
+                    await submitFormData(formData);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                await submitFormData(formData);
+            }
+        });
+        
+        async function submitFormData(formData) {
+            const inShifts = document.querySelector('input[name="inShifts"]:checked').value;
+            
+            if (inShifts === 'yes') {
+                const shiftDates = document.querySelectorAll('input[name="shiftDate[]"]');
+                const altNames = document.querySelectorAll('select[name="altResourceName[]"]');
+                const shiftTypes = document.querySelectorAll('select[name="shiftType[]"]');
+                
+                shiftDates.forEach((date, index) => {
+                    formData.alternativeResources.push({
+                        shiftDate: date.value,
+                        alternativeName: altNames[index].value,
+                        shiftType: shiftTypes[index].value
+                    });
                 });
             }
-
-            const file = document.getElementById('screenshot').files[0];
-            const reader = new FileReader();
-            reader.onload = async (ev) => {
-                formData.screenshot = { data: ev.target.result.split(',')[1], name: file.name, mimeType: file.type };
-                await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(formData) });
-                alert('Success!'); location.reload();
-            };
-            reader.readAsDataURL(file);
-        };
-
+            
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                successMessage.style.display = 'block';
+                
+                timeOffForm.reset();
+                resourcesContainer.innerHTML = '';
+                resourceCount = 0;
+                selectedAlternatives.clear();
+                alternativeResources.classList.remove('show');
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Request';
+            }
+        }
+        
+        // Load employee list when page loads
         loadEmployeeList();
     </script>
 </body>
