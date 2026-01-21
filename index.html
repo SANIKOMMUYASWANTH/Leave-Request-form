@@ -607,29 +607,30 @@
         }
         
         function populateAlternativeDropdown(selectElement, excludeName) {
-            const currentValue = selectElement.value;
-            const availableEmps = getAvailableEmployees(excludeName);
-            
-            selectElement.innerHTML = '<option value="">Select employee</option>';
-            
-            // Add back the currently selected value if it exists
-            if (currentValue && !selectedAlternatives.has(currentValue)) {
-                const option = document.createElement('option');
-                option.value = currentValue;
-                option.textContent = currentValue;
-                option.selected = true;
-                selectElement.appendChild(option);
-            }
-            
-            availableEmps.forEach(emp => {
-                if (emp !== currentValue) {
-                    const option = document.createElement('option');
-                    option.value = emp;
-                    option.textContent = emp;
-                    selectElement.appendChild(option);
-                }
-            });
+    const currentValue = selectElement.value;
+    const availableEmps = getAvailableEmployees(excludeName);
+    
+    selectElement.innerHTML = '<option value="">Select employee</option>';
+    
+    availableEmps.forEach(emp => {
+        const option = document.createElement('option');
+        option.value = emp;
+        option.textContent = emp;
+        if (emp === currentValue) {
+            option.selected = true;
         }
+        selectElement.appendChild(option);
+    });
+    
+    // If current value is selected but not in available list, add it back
+    if (currentValue && !availableEmps.includes(currentValue) && selectedAlternatives.has(currentValue)) {
+        const option = document.createElement('option');
+        option.value = currentValue;
+        option.textContent = currentValue;
+        option.selected = true;
+        selectElement.insertBefore(option, selectElement.children[1]);
+    }
+}
         
         function updateAllAlternativeDropdowns() {
             const requesterName = empNameSelect.value;
